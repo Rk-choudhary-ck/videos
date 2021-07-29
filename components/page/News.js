@@ -47,7 +47,8 @@ export default class News extends Component {
        
       // AdMob
       AdMobRewarded.setTestDevices([AdMobRewarded.simulatorId]);
-      AdMobRewarded.setAdUnitID('ca-app-pub-3940256099942544/5224354917');
+      AdMobRewarded.setAdUnitID('ca-app-pub-1918796407964963/6733737928');
+      // AdMobRewarded.setAdUnitID('ca-app-pub-3940256099942544/5224354917');
 
       AdMobRewarded.addEventListener('rewarded', reward =>
         console.log('AdMobRewarded => rewarded', reward),
@@ -94,11 +95,12 @@ export default class News extends Component {
                
                 <ScrollView>
                              <View style={{ flexDirection: 'row', margin:10}}>
-                                <Image source={this.newsData.image == null ? require('./../../assets/images/news.jpg') : { uri: this.newsData.image }} style={{width:"100%",height:200}}/>
+                                {/* <Image source={this.newsData.image == null ? require('./../../assets/images/news.jpg') : { uri: this.newsData.image }} style={{width:"100%",height:200}}/> */}
+                                <Image source={this.newsData.urlToImage == null ? require('./../../assets/images/news.jpg') : { uri: this.newsData.urlToImage }} style={{width:"100%",height:200}}/>
                              </View>
                              <View style={styles.newsTitle}>
                             <Text style={{ fontSize: fontSize.xl }}>{this.newsData.title } </Text>
-                                 <Text style={{fontSize:fontSize.l,marginVertical:5, padding:4, textAlign:'justify'}}>{this.newsData.description }</Text>
+                                 <Text style={{fontSize:fontSize.l,marginVertical:5, padding:4, textAlign:'justify'}}>{this.newsData.content }</Text>
                             </View>
                     </ScrollView>
                    
