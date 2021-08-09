@@ -16,22 +16,18 @@ import {
   TextInput,
   PermissionsAndroid,
   Linking,
+  ImageBackground,
 } from 'react-native';
 import {Icon} from 'react-native-elements';
 import {colors, fonts, fontSize, ScreenWidth} from './../config';
 import {styles} from './../styles';
 import {sendRequest} from './../functions';
 
-import {AdMobRewarded} from 'react-native-admob';
+import VideoPlayer from 'react-native-video-player';
 
-const BannerExample = ({style, title, children, ...props}) => (
-  <View {...props} style={[styles.example, style]}>
-    <Text style={styles.title}>{title}</Text>
-    <View>{children}</View>
-  </View>
-);
+import {SliderBox} from 'react-native-image-slider-box';
 
-const bannerWidths = [200, 250, 320];
+const vidvvveo = require('../../assets/images/myvideo.webm');
 
 export default class Home extends Component {
   constructor(props) {
@@ -40,130 +36,25 @@ export default class Home extends Component {
       data: [],
       category: [],
       isCatDataShow: true,
-      dataLoader: true,
+      dataLoader: false,
       catLoader: true,
       activeCat: null,
-
       fluidSizeIndex: 0,
+      images: [
+        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRlh8F0_by1feDt-wwiRFzgVJuzDDxIacTkzw&usqp=CAU',
+        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGYtPz4gyUsqrWYuicRxITOTDru4I1tO2xIw&usqp=CAU',
+        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTY3ceuBse_GlIaZDvzQJ6H-eum8u4lVW4hww&usqp=CAU',
+      ],
     };
   }
 
-  componentDidMount() {
-    setTimeout(() => {
-      this.showRewarded();
-    }, 10000);
-
-    this.getAllNews();
-    fetch('https://automoney.co.in/blogs/api/cat')
-      .then((response) => response.json())
-      .then((result) => {
-        if (result != '') {
-          this.setState({category: result});
-        }
-        this.setState({catLoader: false});
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-
-    //
-
-    //    get news with api
-    fetch(
-      'https://newsapi.org/v2/top-headlines?country=in&category=politics&apiKey=0eb767eb5a044da78a3f1f5d3baf0377',
-    )
-      .then((response) => response.json())
-      .then((result) => {
-        if (result != '') {
-          //   console.log(result.articles[0].title);
-          this.setState({data: result.articles, isCatDataShow: true});
-        } else {
-          //   this.setState({isCatDataShow: false});
-        }
-        this.setState({dataLoader: false});
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-
-    //   console.log(this.state.data);
-
-    // admob
-    AdMobRewarded.setTestDevices([AdMobRewarded.simulatorId]);
-    //   AdMobRewarded.setAdUnitID('ca-app-pub-4526056371668696/6501427658');
-    // AdMobRewarded.setAdUnitID('ca-app-pub-3940256099942544/5224354917');
-    AdMobRewarded.setAdUnitID('ca-app-pub-1918796407964963/6733737928');
-
-    AdMobRewarded.addEventListener('rewarded', (reward) =>
-      console.log('AdMobRewarded => rewarded', reward),
-    );
-    AdMobRewarded.addEventListener('adLoaded', () =>
-      console.log('AdMobRewarded => adLoaded'),
-    );
-    AdMobRewarded.addEventListener('adFailedToLoad', (error) =>
-      console.warn(error),
-    );
-    AdMobRewarded.addEventListener('adOpened', () =>
-      console.log('AdMobRewarded => adOpened'),
-    );
-    AdMobRewarded.addEventListener('videoStarted', () =>
-      console.log('AdMobRewarded => videoStarted'),
-    );
-    AdMobRewarded.addEventListener('adClosed', () => {
-      console.log('AdMobRewarded => adClosed');
-      AdMobRewarded.requestAd().catch((error) => console.warn(error));
-    });
-    AdMobRewarded.addEventListener('adLeftApplication', () =>
-      console.log('AdMobRewarded => adLeftApplication'),
-    );
-    AdMobRewarded.requestAd().catch((error) => console.warn(error));
-  }
-
-  componentWillUnmount() {
-    AdMobRewarded.removeAllListeners();
-  }
-
-  showRewarded() {
-    AdMobRewarded.showAd().catch((error) => console.warn(error));
-  }
-
-  getAllNews = () => {
-    this.setState({activeCat: null, dataLoader: true});
-    fetch('https://automoney.co.in/blogs/api/allnews')
-      .then((response) => response.json())
-      .then((result) => {
-        // alert(JSON.stringify(result));
-        if (result != '') {
-          this.setState({data: result, isCatDataShow: true});
-        }
-        this.setState({dataLoader: false});
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  };
-
-  getNews = (value) => {
-    this.setState({activeCat: value, dataLoader: true});
-    // console.log('https://automoney.co.in/blogs/api/news/'+value);
-    fetch('https://automoney.co.in/blogs/api/news/' + value)
-      .then((response) => response.json())
-      .then((result) => {
-        if (result != '') {
-          this.setState({data: result, isCatDataShow: true});
-        } else {
-          this.setState({isCatDataShow: false});
-        }
-        this.setState({dataLoader: false});
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  };
-
   render() {
     return (
-      <View style={{flex: 1, backgroundColor: colors.screenColor}}>
+      <ImageBackground
+        style={[styles.container, {flex: 1}]}
+        source={require('../../assets/images/back.png')}
+        resizeMode="cover">
+        {/* <View style={{ backgroundColor: colors.screenColor}}> */}
         <View style={[styles.header]}>
           <Image
             source={require('./../../assets/images/logo.png')}
@@ -171,126 +62,97 @@ export default class Home extends Component {
           />
           <View style={{flex: 1, justifyContent: 'center'}}>
             <Text style={[styles.headerTitle, {textAlign: 'center'}]}>
-              AAP TAK News
+              JAI MAA AMBAY
             </Text>
           </View>
         </View>
 
-        {/* <View style={{flexDirection: 'row'}}>
+        <View style={{ flexDirection: 'row' }}>
+        
+          
           <ScrollView horizontal>
-            <TouchableOpacity
-              style={
-                this.state.activeCat == null
-                  ? [styles.newsCatBtnActive, {color: colors.Red}]
-                  : styles.newsCatBtn
-              }
-              onPress={() => {
-                this.getAllNews();
-              }}>
-              <Text
-                style={
-                  this.state.activeCat == null
-                    ? styles.newsCategoryActive
-                    : styles.newsCategory
-                }>
-                ALL
-              </Text>
+            <TouchableOpacity style={styles.btnhead}>
+              <Text style={{color: colors.White}}>ALL</Text>
             </TouchableOpacity>
-            {Object.values(this.state.category).map((v) => {
-              return (
-                <TouchableOpacity
-                  style={
-                    this.state.activeCat == v.id
-                      ? [styles.newsCatBtnActive, {color: colors.Red}]
-                      : styles.newsCatBtn
-                  }
-                  onPress={() => {
-                    this.getNews(v.id);
-                  }}>
-                  <Text
-                    style={
-                      this.state.activeCat == v.id
-                        ? styles.newsCategoryActive
-                        : styles.newsCategory
-                    }>
-                    {v.title}
-                  </Text>
-                </TouchableOpacity>
-              );
-            })}
+            <TouchableOpacity style={styles.btnhead}>
+              <Text style={{color: colors.White}}>Latest</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.btnhead}>
+              <Text style={{color: colors.White}}>Favourite</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.btnhead}>
+              <Text style={{color: colors.White}}>Trending</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.btnhead}>
+              <Text style={{color: colors.White}}>Slow Motion</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.btnhead}>
+              <Text style={{color: colors.White}}>More</Text>
+            </TouchableOpacity>
           </ScrollView>
-        </View> */}
+        </View>
 
         <ScrollView
-          contentContainerStyle={{flexGrow: 1, justifyContent: 'center'}}>
-          {this.state.dataLoader ? (
-            <View style={{flex: 1, justifyContent: 'center'}}>
-              <ActivityIndicator size="large" color={colors.Red} />
+          contentContainerStyle={{ flexGrow: 1, justifyContent: 'center' }}>
+          
+          <View style={{marginTop:5}}>
+          <SliderBox
+            images={this.state.images}
+              onCurrentImagePressed={index =>
+                console.warn(`image ${index} pressed`)
+              }
+            />
             </View>
-          ) : (
-            <View style={{flex: 1}}>
-              {this.state.isCatDataShow == true ? (
-                Object.values(this.state.data).map((v) => {
-                  return (
-                      <TouchableOpacity
-                      onPress={() => {
-                        // this.props.navigation.navigate('News', {newsDetail: v});
-                      }}>
-                      <View style={{flexDirection: 'row', margin: 10}}>
-                        <Image
-                          source={
-                            v.urlToImage == null
-                              ? require('./../../assets/images/news.jpg')
-                              : {uri: v.urlToImage}
-                          }
-                          style={{width: '100%', height: 200}}
-                        />
-                      </View>
-                      <View style={styles.newsTitle}>
-                        <Text style={{fontSize: fontSize.xl}}>{v.title}</Text>
-                        <Text
-                          style={{
-                            fontSize: fontSize.xl,
-                            marginVertical: 5,
-                            // padding: 4,
-                            color: 'red',
-                          }}
-                          onPress={() => {
-                            Linking.openURL(v.url);
-                          }}>
-                          See more
-                        </Text>
-                        <Text
-                          style={{
-                            fontSize: fontSize.l,
-                            marginVertical: 5,
-                            padding: 4,
-                          }}
-                          //   numberOfLines={4}
-                          ellipsizeMode="tail">
-                          {v.description}
-                        </Text>
-                      </View>
-                    </TouchableOpacity>
-                  );
-                })
-              ) : (
-                <Text
-                  style={{
-                    fontFamily: fonts.SourceSansProBold,
-                    fontSize: fontSize.m,
-                    color: colors.Red,
-                    flex: 1,
-                    textAlignVertical: 'center',
-                    textAlign: 'center',
-                  }}>
-                  News not Found
-                </Text>
-              )}
-            </View>
-          )}
+          
+          <View style={{flex: 1, padding:7}}>
+            <VideoPlayer
+              video={{
+                uri:
+                  'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+              }}
+              // disableControlsAutoHide={true}
+              // disableFullscreen={true}
+              thumbnail={{ uri: 'https://i.ytimg.com/vi/PIs2KOfh1XU/hqdefault.jpg' }}
+              style={styles.imgclass}
+            />
+            <VideoPlayer
+              video={{
+                uri:
+                  'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+              }}
+              thumbnail={{ uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSkpqOKPTc8330A1VqFlNW619x8uycklCbDsA&usqp=CAU' }}
+              style={styles.imgclass}
+            />
+            <VideoPlayer
+              video={{
+                uri:
+                  'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+              }}
+              thumbnail={{ uri: 'https://imgk.timesnownews.com/story/Bholenath_0.jpg?tr=w-400,h-300,fo-auto' }}
+              style={styles.imgclass}
+            />
+            <VideoPlayer
+              video={{
+                uri:
+                  'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+              }}
+              thumbnail={{ uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRlh8F0_by1feDt-wwiRFzgVJuzDDxIacTkzw&usqp=CAU' }}
+              style={styles.imgclass}
+            />
+            <VideoPlayer
+              video={{
+                uri:
+                  'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+              }}
+              thumbnail={{ uri: 'https://i.ytimg.com/vi/PIs2KOfh1XU/hqdefault.jpg' }}
+              style={styles.imgclass}
+            />
+           
+           
+          </View>
         </ScrollView>
-      </View>
+        {/* </View> */}
+      </ImageBackground>
     );
   }
 }

@@ -118,9 +118,9 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         padding: 2,
         borderBottomWidth: 1,
-        borderBottomColor: colors.Black,
+        borderBottomColor: colors.Red,
         textAlign: 'center',
-        // backgroundColor: colors.OrangeDark
+        backgroundColor: colors.White
     },
     headerTitle: {
         fontFamily: fonts.SourceSansProBold,
@@ -128,6 +128,30 @@ const styles = StyleSheet.create({
         fontSize: fontSize.l,
         // padding: 4,
         // marginLeft: 30
+    },
+    btnhead: {
+        margin: 3,
+        padding: 5,
+        backgroundColor: '#b41216',
+        // backgroundColor: 'green',
+        borderWidth: 1,
+        borderColor: 'white',
+        borderRadius: 5,
+    },
+    imgclass: {
+        marginTop: 10,
+        borderWidth: 1,
+        borderColor: 'white',
+        borderRadius: 5,
+
+        shadowColor: "black",
+        shadowOffset: {
+            width: 1,
+            height: 4,
+        },
+        shadowOpacity: 0.8,
+        shadowRadius: 3.84,
+        elevation: 5,
     },
     buttonItem: {
         backgroundColor: colors.MixLight,
@@ -373,5 +397,12 @@ const styles = StyleSheet.create({
         fontSize: fontSize.m,
         flex: 1,
     },
+    backgroundVideo: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        bottom: 0,
+        right: 0,
+      },
 });
 export { styles }
